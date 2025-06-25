@@ -33,7 +33,7 @@ from datetime import datetime
 plt.style.use('seaborn-v0_8')
 sns.set_palette("husl")
 
-print("✅ All libraries imported successfully!")
+print("All libraries imported successfully!")
 
 def clean_resume_enhanced(text):
     """Enhanced text cleaning function"""
@@ -62,14 +62,14 @@ def clean_resume_enhanced(text):
 
 def load_and_preprocess_data():
     """Load and preprocess the dataset"""
-    print("📊 Loading dataset...")
+    print(" Loading dataset...")
     df = pd.read_csv('UpdatedResumeDataSet.csv')
     
     print(f"Dataset shape: {df.shape}")
     print(f"Categories: {df['Category'].nunique()}")
     
     # Clean resume texts
-    print("🔄 Cleaning resume texts...")
+    print(" Cleaning resume texts...")
     df['Resume_Cleaned'] = df['Resume'].apply(clean_resume_enhanced)
     
     # Label encoding
@@ -85,7 +85,7 @@ def load_and_preprocess_data():
     print(f"Imbalance ratio: {imbalance_ratio:.2f}")
     
     if imbalance_ratio > 1.5:
-        print("⚠️ Balancing dataset...")
+        print("Balancing dataset...")
         balanced_df = df.groupby('Category', group_keys=False).apply(
             lambda x: x.sample(max_count, replace=True)
         ).reset_index(drop=True)
@@ -95,7 +95,7 @@ def load_and_preprocess_data():
 
 def create_features(df):
     """Create TF-IDF features"""
-    print("🔤 Creating TF-IDF features...")
+    print("Creating TF-IDF features...")
     
     tfidf = TfidfVectorizer(
         max_features=10000,
@@ -116,7 +116,7 @@ def create_features(df):
 
 def train_and_evaluate_models(X_tfidf, y):
     """Train and evaluate multiple models"""
-    print("🤖 Training and evaluating models...")
+    print("Training and evaluating models...")
     
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(
@@ -153,19 +153,19 @@ def train_and_evaluate_models(X_tfidf, y):
             'training_time': time.time() - start_time
         }
         
-        print(f"✅ {name} - Accuracy: {accuracy:.4f}, F1: {f1:.4f}")
+        print(f"{name} - Accuracy: {accuracy:.4f}, F1: {f1:.4f}")
     
     return results, X_train, X_test, y_train, y_test
 
 def save_models(results, tfidf, le):
     """Save the best model and preprocessing components"""
-    print("💾 Saving models...")
+    print("Saving models...")
     
     # Find best model
     best_model_name = max(results.keys(), key=lambda x: results[x]['f1_score'])
     best_model = results[best_model_name]['model']
     
-    print(f"🏆 Best model: {best_model_name}")
+    print(f"Best model: {best_model_name}")
     print(f"F1 Score: {results[best_model_name]['f1_score']:.4f}")
     
     # Save components
@@ -194,12 +194,12 @@ def save_models(results, tfidf, le):
     with open('model_metadata.pkl', 'wb') as f:
         pickle.dump(model_metadata, f)
     
-    print("✅ All models saved successfully!")
+    print("All models saved successfully!")
     return best_model_name, best_model
 
 def test_prediction(best_model, tfidf, le):
     """Test the prediction with sample resumes"""
-    print("🧪 Testing prediction function...")
+    print(" Testing prediction function...")
     
     test_resumes = [
         # Data Science resume
@@ -254,7 +254,7 @@ def test_prediction(best_model, tfidf, le):
 
 def main():
     """Main execution function"""
-    print("🚀 Starting Improved Resume Screening AI Analysis")
+    print("Starting Improved Resume Screening AI Analysis")
     print("=" * 60)
     
     # Load and preprocess data
@@ -273,19 +273,19 @@ def main():
     test_prediction(best_model, tfidf, le)
     
     # Final summary
-    print("\\n🎉 Analysis Complete!")
+    print("\\n Analysis Complete!")
     print("=" * 40)
     print(f"Dataset size: {len(df)} resumes")
     print(f"Categories: {len(df['Category'].unique())}")
     print(f"Best model: {best_model_name}")
     print(f"F1 Score: {results[best_model_name]['f1_score']:.4f}")
     print(f"Accuracy: {results[best_model_name]['accuracy']:.4f}")
-    print("\\n💾 Saved files:")
+    print("\\n Saved files:")
     print("- tfidf.pkl: TF-IDF vectorizer")
     print("- clf.pkl: Best model")
     print("- encoder.pkl: Label encoder")
     print("- model_metadata.pkl: Model information")
-    print("\\n🚀 Ready for deployment!")
+    print("\\n Ready for deployment!")
 
 if __name__ == "__main__":
     main() 
