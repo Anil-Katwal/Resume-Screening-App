@@ -7,8 +7,6 @@
 
 import streamlit as st
 import pickle
-import docx  # Extract text from Word file
-import PyPDF2  # Extract text from PDF
 import re
 import pandas as pd
 import plotly.express as px
@@ -16,13 +14,32 @@ import base64
 import time
 import os
 
+# Try to import optional dependencies with error handling
+try:
+    import docx
+    DOCX_AVAILABLE = True
+except ImportError:
+    DOCX_AVAILABLE = False
+    st.warning("⚠️ python-docx not available. DOCX files will not be supported.")
+
+try:
+    import PyPDF2
+    PDF_AVAILABLE = True
+except ImportError:
+    PDF_AVAILABLE = False
+    st.warning("⚠️ PyPDF2 not available. PDF files will not be supported.")
+
 # --- Load Models ---
 @st.cache_resource
 def load_models():
-    svc_model = pickle.load(open('clf.pkl', 'rb'))
-    tfidf = pickle.load(open('tfidf.pkl', 'rb'))
-    le = pickle.load(open('encoder.pkl', 'rb'))
-    return svc_model, tfidf, le
+    try:
+        svc_model = pickle.load(open('clf.pkl', 'rb'))
+        tfidf = pickle.load(open('tfidf.pkl', 'rb'))
+        le = pickle.load(open('encoder.pkl', 'rb'))
+        return svc_model, tfidf, le
+    except Exception as e:
+        st.error(f"Error loading models: {e}")
+        return None, None, None
 
 svc_model, tfidf, le = load_models()
 
@@ -39,6 +56,8 @@ def clean_resume(text):
     return text.strip()
 
 def extract_text_from_pdf(file):
+    if not PDF_AVAILABLE:
+        raise Exception("PDF support not available. Please install PyPDF2.")
     try:
         pdf_reader = PyPDF2.PdfReader(file)
         text = ''
@@ -49,6 +68,8 @@ def extract_text_from_pdf(file):
         raise Exception(f"Error reading PDF: {str(e)}")
 
 def extract_text_from_docx(file):
+    if not DOCX_AVAILABLE:
+        raise Exception("DOCX support not available. Please install python-docx.")
     try:
         doc = docx.Document(file)
         text = ''
@@ -79,8 +100,12 @@ def handle_file_upload(uploaded_file):
     if uploaded_file.size == 0:
         raise ValueError("File is empty")
     if file_extension == 'pdf':
+        if not PDF_AVAILABLE:
+            raise ValueError("PDF support not available. Please upload a TXT file instead.")
         text = extract_text_from_pdf(uploaded_file)
     elif file_extension == 'docx':
+        if not DOCX_AVAILABLE:
+            raise ValueError("DOCX support not available. Please upload a TXT file instead.")
         text = extract_text_from_docx(uploaded_file)
     elif file_extension == 'txt':
         text = extract_text_from_txt(uploaded_file)
@@ -91,6 +116,8 @@ def handle_file_upload(uploaded_file):
     return text
 
 def predict_category(resume_text):
+    if svc_model is None or tfidf is None or le is None:
+        return None, 0.0
     cleaned = clean_resume(resume_text)
     if len(cleaned) < 10:
         return None, 0.0
@@ -109,7 +136,7 @@ def get_download_link(data, filename, text):
     return href
 
 # --- Streamlit App Layout ---
-st.set_page_config(page_title="Resume Screening web App", page_icon="🧑‍💼", layout="wide")
+st.set_page_config(page_title="Resume Screening AI", page_icon="🧑‍💼", layout="wide")
 
 # Custom CSS for modern look
 st.markdown("""
@@ -124,8 +151,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">Resume Screening AI</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🧑‍💼 Resume Screening AI</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Upload a resume (PDF, DOCX, or TXT) and get an instant job category prediction powered by AI.</div>', unsafe_allow_html=True)
+
+# Check if models are loaded
+if svc_model is None:
+    st.error("❌ Models could not be loaded. Please check if all model files are present.")
+    st.stop()
 
 # --- Sidebar ---
 st.sidebar.image("https://img.icons8.com/ios-filled/100/1f77b4/resume.png", width=80)
@@ -136,6 +168,14 @@ st.sidebar.info(
     "**Supported formats:** PDF, DOCX, TXT\n"
     "**Max size:** 10MB"
 )
+
+# Show supported formats based on available dependencies
+supported_formats = ["txt"]
+if PDF_AVAILABLE:
+    supported_formats.append("pdf")
+if DOCX_AVAILABLE:
+    supported_formats.append("docx")
+
 st.sidebar.markdown("---")
 st.sidebar.write("**How it works:**")
 st.sidebar.write("1. Upload your resume file.")
@@ -146,7 +186,7 @@ st.sidebar.write("4. See the result and download the summary.")
 # --- Main Area ---
 with st.container():
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    uploaded_file = st.file_uploader("Upload Resume", type=["pdf", "docx", "txt"], help="PDF, DOCX, or TXT only")
+    uploaded_file = st.file_uploader("Upload Resume", type=supported_formats, help=f"Supported formats: {', '.join(supported_formats).upper()}")
     if uploaded_file:
         with st.spinner(f"Processing {uploaded_file.name}..."):
             try:
@@ -155,7 +195,7 @@ with st.container():
                 if st.checkbox("Show extracted text", False):
                     st.text_area("Extracted Resume Text", resume_text, height=250)
                 st.markdown('<div class="result-card">', unsafe_allow_html=True)
-                st.subheader("Prediction Result")
+                st.subheader("Prediction Result 🏷️")
                 category, confidence = predict_category(resume_text)
                 if category:
                     st.markdown(f"<h3 style='color:#1976d2;'>Predicted Category: <b>{category}</b></h3>", unsafe_allow_html=True)
@@ -166,7 +206,7 @@ with st.container():
                 # Download result
                 result_df = pd.DataFrame([{ 'Filename': uploaded_file.name, 'Category': category, 'Confidence': f"{confidence:.1f}%" }])
                 csv = result_df.to_csv(index=False)
-                st.markdown(get_download_link(csv.encode(), f"prediction_{uploaded_file.name}.csv", "Download Prediction as CSV"), unsafe_allow_html=True)
+                st.markdown(get_download_link(csv.encode(), f"prediction_{uploaded_file.name}.csv", "📥 Download Prediction as CSV"), unsafe_allow_html=True)
             except Exception as e:
                 st.error(f"Error: {str(e)}")
     st.markdown('</div>', unsafe_allow_html=True)
@@ -186,4 +226,4 @@ except Exception:
 st.markdown('</div>', unsafe_allow_html=True)
 
 # --- Footer ---
-st.markdown('<div class="footer">Made by Anil Katwal | Powered by Streamlit & scikit-learn</div>', unsafe_allow_html=True)
+st.markdown('<div class="footer">Made with ❤️ by Resume Screening AI | Powered by Streamlit & scikit-learn</div>', unsafe_allow_html=True)
