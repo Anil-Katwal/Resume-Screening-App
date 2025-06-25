@@ -40,7 +40,7 @@ Before deploying, ensure you have:
 
 ---
 
-## 📈 Monitoring & Maintenance
+##  Monitoring & Maintenance
 
 ### After Deployment:
 
@@ -85,4 +85,4 @@ If you encounter issues:
 
 ---
 
-**Happy Deploying! 🚀** 
+
