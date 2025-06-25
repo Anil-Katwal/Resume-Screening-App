@@ -1,11 +1,38 @@
-#Resume Screening AI
+# 🤖 Resume Screening AI
 
 A robust and intelligent web application for automated resume analysis and job category prediction using machine learning.
 
-##  Features
+## 📁 Project Structure
+
+```
+Resume-Screening-App/
+├── app.py                          # Main Streamlit application
+├── requirements.txt                # Python dependencies
+├── README.md                       # Project documentation
+├── DEPLOYMENT.md                   # Deployment instructions
+├── models/                         # Trained ML models
+│   ├── clf.pkl                    # Classification model
+│   ├── tfidf.pkl                  # TF-IDF vectorizer
+│   ├── encoder.pkl                # Label encoder
+│   └── model_metadata.pkl         # Model metadata
+├── data/                          # Dataset
+│   └── UpdatedResumeDataSet.csv   # Training dataset
+├── notebooks/                     # Jupyter notebooks
+│   ├── resume-screening.ipynb     # Original analysis
+│   └── resume-screening-improved.ipynb
+├── scripts/                       # Python scripts
+│   └── resume-screening-improved.py
+├── .streamlit/                    # Streamlit configuration
+│   └── config.toml
+├── Dockerfile                     # Docker configuration
+├── Procfile                       # Heroku configuration
+├── packages.txt                   # System dependencies
+└── runtime.txt                    # Python runtime
+```
+
+## ✨ Features
 
 - **Multi-format Support**: Upload resumes in PDF, DOCX, or TXT formats
-- **Batch Processing**: Process multiple files simultaneously
 - **Real-time Analytics**: Interactive charts and statistics
 - **Confidence Scoring**: Get prediction confidence levels
 - **Error Handling**: Comprehensive error logging and user feedback
@@ -13,11 +40,11 @@ A robust and intelligent web application for automated resume analysis and job c
 - **Modern UI**: Beautiful, responsive interface with custom styling
 - **Session Management**: Persistent data across app sessions
 
-## Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
 - Python 3.8 or higher
-- All required model files (`clf.pkl`, `tfidf.pkl`, `encoder.pkl`)
+- All required model files in the `models/` directory
 
 ### Installation
 
@@ -40,25 +67,34 @@ A robust and intelligent web application for automated resume analysis and job c
 4. **Open your browser**
    Navigate to `http://localhost:8501`
 
-## Usage Guide
+## 🔧 Model Training
+
+To retrain the model with new data:
+
+```bash
+cd scripts
+python resume-screening-improved.py
+```
+
+This will:
+- Load data from `data/UpdatedResumeDataSet.csv`
+- Train multiple models and select the best one
+- Save models to `models/` directory
+- Generate model metadata
+
+## 📋 Usage Guide
 
 ### Uploading Resumes
 1. Click on the file upload area or drag and drop files
 2. Supported formats: PDF, DOCX, TXT
 3. Maximum file size: 10MB per file
-4. You can upload multiple files at once
 
 ### Viewing Results
-- **Dashboard**: Check real-time statistics in the sidebar
-- **Category Distribution**: Interactive pie chart showing job categories
-- **Results Table**: Detailed analysis with confidence scores
-- **Error Log**: View any processing errors in the expandable section
+- **Prediction**: See the predicted job category
+- **Confidence**: View prediction confidence score
+- **Download**: Export results as CSV
 
-### Exporting Data
-- Click "Download Results CSV" to export analysis results
-- Use "Clear All Data" to reset the session
-
-## Technical Details
+## 🔧 Technical Details
 
 ### Machine Learning Pipeline
 - **Text Extraction**: Robust extraction from multiple file formats
@@ -74,13 +110,7 @@ A robust and intelligent web application for automated resume analysis and job c
 - Model loading error handling
 - Comprehensive error logging
 
-### Performance Features
-- Cached model loading
-- Session state management
-- Efficient batch processing
-- Memory optimization
-
-##Supported Job Categories
+## 📊 Supported Job Categories
 
 The model can predict various job categories including:
 - Data Science
@@ -92,28 +122,28 @@ The model can predict various job categories including:
 - Healthcare
 - And more...
 
-##  Customization
+## 🛠️ Customization
 
 ### Adding New File Formats
-1. Add the format to the `handle_file_upload()` function
+1. Add the format to the `handle_file_upload()` function in `app.py`
 2. Create a corresponding extraction function
 3. Update the file uploader type list
 
 ### Modifying the UI
 - Edit the CSS styles in the `st.markdown()` section
-- Modify the layout structure in the `main()` function
+- Modify the layout structure in the main function
 - Add new visualizations using Plotly
 
 ### Model Updates
-- Replace the pickle files with new trained models
+- Replace the pickle files in `models/` with new trained models
 - Ensure compatibility with the existing preprocessing pipeline
 
-##Troubleshooting
+## 🐛 Troubleshooting
 
 ### Common Issues
 
 **"Model file not found" error**
-- Ensure `clf.pkl`, `tfidf.pkl`, and `encoder.pkl` are in the project directory
+- Ensure all `.pkl` files are in the `models/` directory
 - Check file permissions
 
 **"File size too large" error**
@@ -127,11 +157,6 @@ The model can predict various job categories including:
 **Import errors**
 - Install all dependencies: `pip install -r requirements.txt`
 - Check Python version compatibility
-
-### Performance Tips
-- Use SSD storage for faster file processing
-- Close other applications to free up memory
-- Process files in smaller batches for large datasets
 
 ## 📈 Future Enhancements
 

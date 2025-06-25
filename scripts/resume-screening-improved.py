@@ -28,12 +28,13 @@ import re
 import pickle
 import time
 from datetime import datetime
+import os
 
 # Set style
 plt.style.use('seaborn-v0_8')
 sns.set_palette("husl")
 
-print("✅ All libraries imported successfully!")
+print("All libraries imported successfully!")
 
 def clean_resume_enhanced(text):
     """Enhanced text cleaning function"""
@@ -63,7 +64,7 @@ def clean_resume_enhanced(text):
 def load_and_preprocess_data():
     """Load and preprocess the dataset"""
     print("📊 Loading dataset...")
-    df = pd.read_csv('UpdatedResumeDataSet.csv')
+    df = pd.read_csv('data/UpdatedResumeDataSet.csv')
     
     print(f"Dataset shape: {df.shape}")
     print(f"Categories: {df['Category'].nunique()}")
@@ -95,7 +96,7 @@ def load_and_preprocess_data():
 
 def create_features(df):
     """Create TF-IDF features"""
-    print("🔤 Creating TF-IDF features...")
+    print("Creating TF-IDF features...")
     
     tfidf = TfidfVectorizer(
         max_features=10000,
@@ -116,7 +117,7 @@ def create_features(df):
 
 def train_and_evaluate_models(X_tfidf, y):
     """Train and evaluate multiple models"""
-    print("🤖 Training and evaluating models...")
+    print("Training and evaluating models...")
     
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(
@@ -153,7 +154,7 @@ def train_and_evaluate_models(X_tfidf, y):
             'training_time': time.time() - start_time
         }
         
-        print(f"✅ {name} - Accuracy: {accuracy:.4f}, F1: {f1:.4f}")
+        print(f"{name} - Accuracy: {accuracy:.4f}, F1: {f1:.4f}")
     
     return results, X_train, X_test, y_train, y_test
 
@@ -168,14 +169,17 @@ def save_models(results, tfidf, le):
     print(f"🏆 Best model: {best_model_name}")
     print(f"F1 Score: {results[best_model_name]['f1_score']:.4f}")
     
+    # Create models directory if it doesn't exist
+    os.makedirs('models', exist_ok=True)
+    
     # Save components
-    with open('tfidf.pkl', 'wb') as f:
+    with open('models/tfidf.pkl', 'wb') as f:
         pickle.dump(tfidf, f)
     
-    with open('clf.pkl', 'wb') as f:
+    with open('models/clf.pkl', 'wb') as f:
         pickle.dump(best_model, f)
     
-    with open('encoder.pkl', 'wb') as f:
+    with open('models/encoder.pkl', 'wb') as f:
         pickle.dump(le, f)
     
     # Save metadata
@@ -191,7 +195,7 @@ def save_models(results, tfidf, le):
         'created_at': datetime.now().isoformat()
     }
     
-    with open('model_metadata.pkl', 'wb') as f:
+    with open('models/model_metadata.pkl', 'wb') as f:
         pickle.dump(model_metadata, f)
     
     print("✅ All models saved successfully!")
@@ -199,7 +203,7 @@ def save_models(results, tfidf, le):
 
 def test_prediction(best_model, tfidf, le):
     """Test the prediction with sample resumes"""
-    print("🧪 Testing prediction function...")
+    print(" Testing prediction function...")
     
     test_resumes = [
         # Data Science resume
@@ -254,7 +258,7 @@ def test_prediction(best_model, tfidf, le):
 
 def main():
     """Main execution function"""
-    print("🚀 Starting Improved Resume Screening AI Analysis")
+    print("Starting Improved Resume Screening AI Analysis")
     print("=" * 60)
     
     # Load and preprocess data
@@ -273,19 +277,19 @@ def main():
     test_prediction(best_model, tfidf, le)
     
     # Final summary
-    print("\\n🎉 Analysis Complete!")
+    print("\\n Analysis Complete!")
     print("=" * 40)
     print(f"Dataset size: {len(df)} resumes")
     print(f"Categories: {len(df['Category'].unique())}")
     print(f"Best model: {best_model_name}")
     print(f"F1 Score: {results[best_model_name]['f1_score']:.4f}")
     print(f"Accuracy: {results[best_model_name]['accuracy']:.4f}")
-    print("\\n💾 Saved files:")
+    print("\\n Saved files:")
     print("- tfidf.pkl: TF-IDF vectorizer")
     print("- clf.pkl: Best model")
     print("- encoder.pkl: Label encoder")
     print("- model_metadata.pkl: Model information")
-    print("\\n🚀 Ready for deployment!")
+    print("\\n Ready for deployment!")
 
 if __name__ == "__main__":
     main() 

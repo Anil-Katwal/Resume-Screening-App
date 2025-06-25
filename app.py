@@ -33,9 +33,9 @@ except ImportError:
 @st.cache_resource
 def load_models():
     try:
-        svc_model = pickle.load(open('clf.pkl', 'rb'))
-        tfidf = pickle.load(open('tfidf.pkl', 'rb'))
-        le = pickle.load(open('encoder.pkl', 'rb'))
+        svc_model = pickle.load(open('models/clf.pkl', 'rb'))
+        tfidf = pickle.load(open('models/tfidf.pkl', 'rb'))
+        le = pickle.load(open('models/encoder.pkl', 'rb'))
         return svc_model, tfidf, le
     except Exception as e:
         st.error(f"Error loading models: {e}")
@@ -215,7 +215,7 @@ with st.container():
 st.markdown('<div class="card">', unsafe_allow_html=True)
 st.subheader("How Accurate is the Model?")
 try:
-    with open('model_metadata.pkl', 'rb') as f:
+    with open('models/model_metadata.pkl', 'rb') as f:
         meta = pickle.load(f)
     st.write(f"**Model:** {meta.get('model_name','-')}")
     st.write(f"**Accuracy:** {meta.get('accuracy',0):.2%}")
