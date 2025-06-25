@@ -20,14 +20,14 @@ try:
     DOCX_AVAILABLE = True
 except ImportError:
     DOCX_AVAILABLE = False
-    st.warning("⚠️ python-docx not available. DOCX files will not be supported.")
+    st.warning("⚠ python-docx not available. DOCX files will not be supported.")
 
 try:
     import PyPDF2
     PDF_AVAILABLE = True
 except ImportError:
     PDF_AVAILABLE = False
-    st.warning("⚠️ PyPDF2 not available. PDF files will not be supported.")
+    st.warning(" PyPDF2 not available. PDF files will not be supported.")
 
 # --- Load Models ---
 @st.cache_resource
@@ -136,7 +136,7 @@ def get_download_link(data, filename, text):
     return href
 
 # --- Streamlit App Layout ---
-st.set_page_config(page_title="Resume Screening AI", page_icon="🧑‍💼", layout="wide")
+st.set_page_config(page_title="Resume Screening Web app", page_icon="🧑‍💼", layout="wide")
 
 # Custom CSS for modern look
 st.markdown("""
@@ -151,12 +151,12 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-title">🧑‍💼 Resume Screening AI</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title"> 🧑‍💼Resume Screening AI</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Upload a resume (PDF, DOCX, or TXT) and get an instant job category prediction powered by AI.</div>', unsafe_allow_html=True)
 
 # Check if models are loaded
 if svc_model is None:
-    st.error("❌ Models could not be loaded. Please check if all model files are present.")
+    st.error(" Models could not be loaded. Please check if all model files are present.")
     st.stop()
 
 # --- Sidebar ---
@@ -195,7 +195,7 @@ with st.container():
                 if st.checkbox("Show extracted text", False):
                     st.text_area("Extracted Resume Text", resume_text, height=250)
                 st.markdown('<div class="result-card">', unsafe_allow_html=True)
-                st.subheader("Prediction Result 🏷️")
+                st.subheader("Prediction Result")
                 category, confidence = predict_category(resume_text)
                 if category:
                     st.markdown(f"<h3 style='color:#1976d2;'>Predicted Category: <b>{category}</b></h3>", unsafe_allow_html=True)
@@ -206,7 +206,7 @@ with st.container():
                 # Download result
                 result_df = pd.DataFrame([{ 'Filename': uploaded_file.name, 'Category': category, 'Confidence': f"{confidence:.1f}%" }])
                 csv = result_df.to_csv(index=False)
-                st.markdown(get_download_link(csv.encode(), f"prediction_{uploaded_file.name}.csv", "📥 Download Prediction as CSV"), unsafe_allow_html=True)
+                st.markdown(get_download_link(csv.encode(), f"prediction_{uploaded_file.name}.csv", " Download Prediction as CSV"), unsafe_allow_html=True)
             except Exception as e:
                 st.error(f"Error: {str(e)}")
     st.markdown('</div>', unsafe_allow_html=True)
@@ -226,4 +226,4 @@ except Exception:
 st.markdown('</div>', unsafe_allow_html=True)
 
 # --- Footer ---
-st.markdown('<div class="footer">Made with ❤️ by Resume Screening AI | Powered by Streamlit & scikit-learn</div>', unsafe_allow_html=True)
+st.markdown('<div class="footer">Made by Anil Katwal for Resume Screening | Powered by Streamlit & scikit-learn</div>', unsafe_allow_html=True)
