@@ -1,8 +1,8 @@
-# 🤖 Resume Screening AI
+# Resume Screening AI
 
 A robust and intelligent web application for automated resume analysis and job category prediction using machine learning.
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Resume-Screening-App/
@@ -30,7 +30,7 @@ Resume-Screening-App/
 └── runtime.txt                    # Python runtime
 ```
 
-## ✨ Features
+##  Features
 
 - **Multi-format Support**: Upload resumes in PDF, DOCX, or TXT formats
 - **Real-time Analytics**: Interactive charts and statistics
@@ -40,7 +40,7 @@ Resume-Screening-App/
 - **Modern UI**: Beautiful, responsive interface with custom styling
 - **Session Management**: Persistent data across app sessions
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 - Python 3.8 or higher
@@ -67,7 +67,7 @@ Resume-Screening-App/
 4. **Open your browser**
    Navigate to `http://localhost:8501`
 
-## 🔧 Model Training
+##  Model Training
 
 To retrain the model with new data:
 
@@ -82,7 +82,7 @@ This will:
 - Save models to `models/` directory
 - Generate model metadata
 
-## 📋 Usage Guide
+##  Usage Guide
 
 ### Uploading Resumes
 1. Click on the file upload area or drag and drop files
@@ -94,7 +94,7 @@ This will:
 - **Confidence**: View prediction confidence score
 - **Download**: Export results as CSV
 
-## 🔧 Technical Details
+##  Technical Details
 
 ### Machine Learning Pipeline
 - **Text Extraction**: Robust extraction from multiple file formats
@@ -110,7 +110,7 @@ This will:
 - Model loading error handling
 - Comprehensive error logging
 
-## 📊 Supported Job Categories
+##  Supported Job Categories
 
 The model can predict various job categories including:
 - Data Science
@@ -122,7 +122,7 @@ The model can predict various job categories including:
 - Healthcare
 - And more...
 
-## 🛠️ Customization
+##  Customization
 
 ### Adding New File Formats
 1. Add the format to the `handle_file_upload()` function in `app.py`
@@ -138,7 +138,7 @@ The model can predict various job categories including:
 - Replace the pickle files in `models/` with new trained models
 - Ensure compatibility with the existing preprocessing pipeline
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
@@ -158,7 +158,7 @@ The model can predict various job categories including:
 - Install all dependencies: `pip install -r requirements.txt`
 - Check Python version compatibility
 
-## 📈 Future Enhancements
+##  Future Enhancements
 
 - [ ] OCR support for image-based resumes
 - [ ] Multi-language support
@@ -169,7 +169,7 @@ The model can predict various job categories including:
 - [ ] Resume scoring and ranking
 - [ ] Skills extraction and matching
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -177,11 +177,11 @@ The model can predict various job categories including:
 4. Test thoroughly
 5. Submit a pull request
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built with Streamlit for the web interface
 - Powered by scikit-learn for machine learning
@@ -190,4 +190,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**Built with ❤️ using Streamlit and Machine Learning**
+**Built with  using Streamlit and Machine Learning**
